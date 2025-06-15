@@ -2,7 +2,6 @@ using System.Buffers;
 using System.Diagnostics.CodeAnalysis;
 using System.Text;
 using System.Text.Json;
-using ZLogger.Formatters;
 using ZLogger.Internal;
 
 namespace ZLogger.LogStates

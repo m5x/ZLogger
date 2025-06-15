@@ -66,7 +66,7 @@ file readonly struct CouldNotOpenSocketState : IZLoggerFormattable,  IReadOnlyLi
 
     public override string ToString() => $"Could not open socket to {hostName} {ipAddress}.";
 
-    public void ToString(IBufferWriter<byte> writer)
+    public void ToString(IBufferWriter<byte> writer, ValueDecorationWriter valueDecorationWriter)
     {
         var stringWriter = new Utf8StringWriter<IBufferWriter<byte>>(literalLength: 33, formattedCount: 2, bufferWriter: writer);
 
@@ -89,7 +89,7 @@ file readonly struct CouldNotOpenSocketState : IZLoggerFormattable,  IReadOnlyLi
         writer.WriteNumber(_jsonParameter_ipAddress, this.ipAddress);
 
         var datetime = DateTime.Now;
-        
+
         // writer.WriteString(_jsonParameter_hostName, EnumLookup<LogLevel>.GetJsonEncodedName(LogLevel.Information));
 
         // writer.WritePropertyName(_jsonParameter_ipAddress); JsonSerializer.Serialize(writer, this.ipAddress, jsonSerializerOptions);
@@ -160,7 +160,7 @@ file readonly struct CouldNotOpenSocketState : IZLoggerFormattable,  IReadOnlyLi
         1 => new KeyValuePair<string, object?>("ipAddress", ipAddress),
         _ => throw new ArgumentOutOfRangeException()
     };
-    
+
     public IEnumerator<KeyValuePair<string, object?>> GetEnumerator() => new Enumerator(this);
     IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
 
@@ -186,7 +186,7 @@ file readonly struct CouldNotOpenSocketState : IZLoggerFormattable,  IReadOnlyLi
     {
         int currentIndex;
         CouldNotOpenSocketState state;
-        
+
         public Enumerator(CouldNotOpenSocketState state)
         {
             this.state = state;
@@ -230,7 +230,7 @@ file readonly struct SamplerState2 : IZLoggerFormattable
     public bool IsSupportUtf8ParameterKey => true;
     public override string ToString() => $"Could not open socket to {banana} {dt}.";
 
-    public void ToString(IBufferWriter<byte> writer)
+    public void ToString(IBufferWriter<byte> writer, ValueDecorationWriter valueDecorationWriter)
     {
         var stringWriter = new Utf8StringWriter<IBufferWriter<byte>>(literalLength: 27, formattedCount: 2, bufferWriter: writer);
 

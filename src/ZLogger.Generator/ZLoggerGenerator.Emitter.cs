@@ -73,7 +73,7 @@ public partial class ZLoggerGenerator
 
             var implAdditionalInfo = additionalParameters.Length > 0 ? ", IZLoggerAdditionalInfo" : "";
             var additionalMembers = implAdditionalInfo != "" ? $"""
-        readonly object? zloggerContext;        
+        readonly object? zloggerContext;
         readonly string? callerMemberName;
         readonly string? callerFilePath;
         readonly int callerLineNumber;
@@ -83,7 +83,7 @@ public partial class ZLoggerGenerator
     readonly struct {{stateTypeName}} : IZLoggerFormattable{{implAdditionalInfo}}, IReadOnlyList<KeyValuePair<string, object?>>
     {
 {{additionalMembers}}
-    
+
 {{jsonParameters}}
 
 {{fieldParameters}}
@@ -145,12 +145,12 @@ public partial class ZLoggerGenerator
             }
             sb.AppendLine($$"""
         }
-            
+
         public IZLoggerEntry CreateEntry(in LogInfo info)
         {
             return ZLoggerEntry<{{stateTypeName}}>.Create(info, this);
         }
-        
+
 """);
 
             if (implAdditionalInfo != "")
@@ -215,11 +215,11 @@ public partial class ZLoggerGenerator
                     .StringJoinNewLine();
 
                 sb.AppendLine($$"""
-        public void ToString(global::System.Buffers.IBufferWriter<byte> writer)
+        public void ToString(global::System.Buffers.IBufferWriter<byte> writer, global::ZLogger.ValueDecorationWriter valueDecorationWriter)
         {
             var stringWriter = new global::Utf8StringInterpolation.Utf8StringWriter<global::System.Buffers.IBufferWriter<byte>>(literalLength: {{literalLength}}, formattedCount: {{formattedCount}}, bufferWriter: writer);
 
-{{appendValues}}            
+{{appendValues}}
 
             stringWriter.Flush();
         }
@@ -330,13 +330,13 @@ public partial class ZLoggerGenerator
         {
             int currentIndex;
             {{stateTypeName}} state;
-            
+
             public Enumerator({{stateTypeName}} state)
             {
                 this.state = state;
                 currentIndex = -1;
             }
-        
+
             public bool MoveNext() => ++currentIndex < {{methodParameters.Length}};
             public void Reset() => currentIndex = -1;
             public KeyValuePair<string, object?> Current => state[currentIndex];

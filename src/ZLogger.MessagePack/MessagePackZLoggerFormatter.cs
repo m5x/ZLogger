@@ -15,12 +15,12 @@ public record MessagePackPropertyNames(
     MessagePackEncodedText EventIdName,
     MessagePackEncodedText Exception,
     MessagePackEncodedText Message,
-    
+
     MessagePackEncodedText ExceptionName,
     MessagePackEncodedText ExceptionMessage,
     MessagePackEncodedText ExceptionStackTrace,
     MessagePackEncodedText ExceptionInnerException,
-    
+
     MessagePackEncodedText LogLevelTrace,
     MessagePackEncodedText LogLevelDebug,
     MessagePackEncodedText LogLevelInformation,
@@ -28,7 +28,7 @@ public record MessagePackPropertyNames(
     MessagePackEncodedText LogLevelError,
     MessagePackEncodedText LogLevelCritical,
     MessagePackEncodedText LogLevelNone,
-    
+
     MessagePackEncodedText? ParameterKeyValues = null,
     MessagePackEncodedText? ScopeKeyValues = null)
 {
@@ -163,7 +163,7 @@ public class MessagePackZLoggerFormatter : IZLoggerFormatter
         {
             messagePackWriter.WriteRaw(PropertyNames.Message.Utf8EncodedValue);
             var buffer = GetThreadStaticBufferWriter();
-            entry.ToString(buffer);
+            entry.ToString(buffer, null);
             messagePackWriter.WriteString(buffer.WrittenSpan);
         }
 
@@ -178,7 +178,7 @@ public class MessagePackZLoggerFormatter : IZLoggerFormatter
                     messagePackWriter.WriteRaw(PropertyNames.ScopeKeyValues.Value.Utf8EncodedValue);
                     messagePackWriter.WriteMapHeader(scopePropCount);
                 }
-                
+
                 foreach (var t in scopeProperties)
                 {
                     var (key, value) = t;
@@ -366,7 +366,7 @@ public class MessagePackZLoggerFormatter : IZLoggerFormatter
                 var value = entry.GetParameterValue<TimeSpan>(index);
                 MessagePackSerializer.Serialize(type, ref messagePackWriter, value, MessagePackSerializerOptions);
             }
-#if NET6_OR_GRATER                
+#if NET6_OR_GREATER
                 else if (type == typeof(TimeOnly))
                 {
                     var value = entry.GetParameterValue<TimeOnly>(index);

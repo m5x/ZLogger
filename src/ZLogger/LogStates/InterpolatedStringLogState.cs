@@ -100,9 +100,9 @@ public sealed class InterpolatedStringLogState :
         return messageSequence.ToString(magicalBox, parameters);
     }
 
-    public void ToString(IBufferWriter<byte> writer)
+    public void ToString(IBufferWriter<byte> writer, ValueDecorationWriter? valueDecorationWriter)
     {
-        messageSequence.ToString(writer, magicalBox, parameters);
+        messageSequence.ToString(writer, magicalBox, parameters, valueDecorationWriter);
     }
 
     public string GetOriginalFormat()

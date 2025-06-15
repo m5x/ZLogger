@@ -2,6 +2,7 @@ using System.Buffers;
 using System.Diagnostics.CodeAnalysis;
 using System.Text;
 using System.Text.Json;
+using ZLogger.Formatters;
 using ZLogger.Internal;
 
 namespace ZLogger.LogStates
@@ -50,7 +51,7 @@ namespace ZLogger.LogStates
 
         public override string ToString() => formattedLog ?? formatter(originalState, exception);
 
-        public void ToString(IBufferWriter<byte> writer)
+        public void ToString(IBufferWriter<byte> writer, ValueDecorationWriter? valueDecorationWriter)
         {
             var str = ToString();
             var buffer = writer.GetSpan(Encoding.UTF8.GetMaxByteCount(str.Length));

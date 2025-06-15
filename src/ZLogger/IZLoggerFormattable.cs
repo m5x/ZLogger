@@ -14,7 +14,7 @@ public interface IZLoggerFormattable : IZLoggerEntryCreatable
     int ParameterCount { get; }
     bool IsSupportUtf8ParameterKey { get; }
     string ToString();
-    void ToString(IBufferWriter<byte> writer);
+    void ToString(IBufferWriter<byte> writer, ValueDecorationWriter? valueFormatter);
 
     string GetOriginalFormat();
     void WriteOriginalFormat(IBufferWriter<byte> writer);

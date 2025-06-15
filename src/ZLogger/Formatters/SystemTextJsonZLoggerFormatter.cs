@@ -151,7 +151,7 @@ namespace ZLogger.Formatters
             if ((IncludeProperties & IncludeProperties.Message) != 0)
             {
                 var bufferWriter = ArrayBufferWriterPool.GetThreadStaticInstance();
-                entry.ToString(bufferWriter);
+                entry.ToString(bufferWriter, null);
                 jsonWriter.WriteString(JsonPropertyNames.Message, bufferWriter.WrittenSpan);
             }
 

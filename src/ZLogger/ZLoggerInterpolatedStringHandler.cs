@@ -229,7 +229,7 @@ namespace ZLogger
             }
         }
 
-        public void ToString(IBufferWriter<byte> writer, MagicalBox box, Span<InterpolatedStringParameter> parameters)
+        public void ToString(IBufferWriter<byte> writer, MagicalBox box, Span<InterpolatedStringParameter> parameters, ValueDecorationWriter? valueDecorationWriter )
         {
             var stringWriter = new Utf8StringWriter<IBufferWriter<byte>>(literalLength, parametersLength, writer);
 
@@ -249,6 +249,8 @@ namespace ZLogger
                     }
                     else if (!box.TryReadTo(p.Type, p.BoxOffset, p.Alignment, p.Format, ref stringWriter))
                     {
+                        valueDecorationWriter?.Invoke(false, p.BoxedValue, ref stringWriter);
+
                         if (p.BoxedValue is string s)
                         {
                             stringWriter.AppendFormatted(s, p.Alignment, p.Format);
@@ -268,6 +270,8 @@ namespace ZLogger
                         {
                             stringWriter.AppendFormatted(p.BoxedValue, p.Alignment, p.Format);
                         }
+
+                        valueDecorationWriter?.Invoke(true, p.BoxedValue, ref stringWriter);
                     }
                 }
             }

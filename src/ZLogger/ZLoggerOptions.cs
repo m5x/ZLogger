@@ -81,6 +81,17 @@ public class ZLoggerOptions
         return this;
     }
 
+    public ZLoggerOptions UseAnsiConsoleFormatter(Action<AnsiConsoleZLoggerFormatter>? configure = null)
+    {
+        UseFormatter(() =>
+        {
+            var formatter = new AnsiConsoleZLoggerFormatter();
+            configure?.Invoke(formatter);
+            return formatter;
+        });
+        return this;
+    }
+
     static IZLoggerFormatter DefaultFormatterFactory()
     {
         return new PlainTextZLoggerFormatter();

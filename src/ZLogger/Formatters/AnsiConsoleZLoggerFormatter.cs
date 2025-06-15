@@ -1,11 +1,13 @@
 using System.Buffers;
 using System.Text;
+using Microsoft.Extensions.Logging;
+using ZLogger.Internal;
 
 namespace ZLogger.Formatters
 {
-    public delegate void MessageTemplateFormatter(in MessageTemplate template, in LogInfo info);
+    public delegate void AnsiConsoleMessageTemplateFormatter(in MessageTemplate template, in LogInfo info, in AnsiConsoleTheme theme);
 
-    public class PlainTextZLoggerFormatter : IZLoggerFormatter
+    public class AnsiConsoleZLoggerFormatter : IZLoggerFormatter
     {
         static readonly byte[] newLine = Encoding.UTF8.GetBytes(Environment.NewLine);
 
@@ -14,17 +16,19 @@ namespace ZLogger.Formatters
         Action<IBufferWriter<byte>, Exception> exceptionFormatter = DefaultExceptionLoggingFormatter;
 
         MessageTemplateHolder? prefixTemplate;
-        MessageTemplateFormatter? prefixFormatter;
+        AnsiConsoleMessageTemplateFormatter? prefixFormatter;
         MessageTemplateHolder? suffixTemplate;
-        MessageTemplateFormatter? suffixFormatter;
+        AnsiConsoleMessageTemplateFormatter? suffixFormatter;
 
-        public void SetPrefixFormatter(MessageTemplateHandler format, MessageTemplateFormatter formatter)
+        public AnsiConsoleTheme Theme { get; set; } = AnsiConsoleThemes.Code;
+
+        public void SetPrefixFormatter(MessageTemplateHandler format, AnsiConsoleMessageTemplateFormatter formatter)
         {
             this.prefixTemplate = format.GetTemplate();
             this.prefixFormatter = formatter;
         }
 
-        public void SetSuffixFormatter(MessageTemplateHandler format, MessageTemplateFormatter formatter)
+        public void SetSuffixFormatter(MessageTemplateHandler format, AnsiConsoleMessageTemplateFormatter formatter)
         {
             this.suffixTemplate = format.GetTemplate();
             this.suffixFormatter = formatter;
@@ -39,14 +43,14 @@ namespace ZLogger.Formatters
         {
             if (prefixTemplate != null)
             {
-                prefixFormatter!(new MessageTemplate(prefixTemplate, writer), entry.LogInfo);
+                prefixFormatter!(new MessageTemplate(prefixTemplate, writer), entry.LogInfo, Theme);
             }
 
-            entry.ToString(writer, null);
+            entry.ToString(writer, Theme.WriteValueDecoration);
 
             if (suffixTemplate != null)
             {
-                suffixFormatter!(new MessageTemplate(suffixTemplate, writer), entry.LogInfo);
+                suffixFormatter!(new MessageTemplate(suffixTemplate, writer), entry.LogInfo, Theme);
             }
 
             if (entry.LogInfo.Exception is { } ex)
